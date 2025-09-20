@@ -1,12 +1,9 @@
-import "./App.css";
+// src/App.tsx
+
 import HomePage from "./pages/HomePage/HomePage";
 
-function App(): any {
-  return (
-    <>
-      <HomePage />
-    </>
-  );
+function App() {
+  return <HomePage />;
 }
 
 export default App;

@@ -1,9 +1,9 @@
-export default function HomePage(): any {
+import LoginPage from "../LoginPage/LoginPage";
+
+export default function HomePage() {
   return (
-    <div>
-      <h1>Welcome to the Home Page</h1>
-      {/* Your other components or HTML go here */}
-    </div>
+    <>
+      <LoginPage />
+    </>
   );
 }
-HomePage();

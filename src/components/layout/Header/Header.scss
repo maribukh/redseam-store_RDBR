@@ -1,0 +1,30 @@
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28px 0px;
+
+  .logo {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+
+    h1 {
+      font-weight: 600;
+      font-size: 1rem;
+      margin-left: 4px;
+    }
+  }
+
+  .login-btn {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+
+    a {
+      text-decoration: none;
+      color: var(--primary-dark);
+      margin-left: 8px;
+    }
+  }
+}

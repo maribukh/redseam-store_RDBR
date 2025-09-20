@@ -3,3 +3,18 @@
   --secondary-gray: #3E424A;
   --accent-orange: #FF4000;
 }
+
+a {
+  text-decoration: none;
+}
+
+
+body {
+  font-family: 'Poppins', sans-serif;
+  color: var(--primary-dark);
+}
+
+.container {
+  width: 89.58%;
+  margin: auto;
+}
