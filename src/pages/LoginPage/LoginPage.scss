@@ -1,0 +1,58 @@
+.login-page-container {
+  display: flex;
+  justify-content: space-between;
+  height: 100vh;
+
+  .login-image-section {
+    width: 50%;
+    display: flex;
+    align-items: stretch;
+
+    img {
+      height: 100%;
+    }
+  }
+
+  .login-form-section {
+    .input-group {
+      position: relative;
+      margin-bottom: 20px;
+
+      input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 1rem;
+      }
+
+      label {
+        position: absolute;
+        left: 10px;
+        top: 10px;
+        color: #999;
+        pointer-events: none;
+        transition: all 0.2s ease;
+      }
+
+      .password-icon {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+      }
+
+
+      input:focus + label,
+      input:not(:placeholder-shown) + label {
+        top: -8px;
+        left: 8px;
+        font-size: 0.75rem;
+        color: var(--accent-orange); 
+        background-color: white;
+        padding: 0 5px;
+      }
+    }
+  }
+}
