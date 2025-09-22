@@ -1,0 +1,16 @@
+.registration-form-section {
+  .img-upload-section {
+    width: 49.09%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .action {
+      display: flex;
+      gap: 15px;
+
+      span {
+        cursor: pointer;
+      }
+    }
+  }
+}

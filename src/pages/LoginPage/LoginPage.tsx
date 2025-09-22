@@ -1,8 +1,9 @@
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, type SubmitHandler } from "react-hook-form";
 import Header from "../../components/layout/Header/Header";
 import "./LoginPage.scss";
 import HeroImage from "../../assets/images/Rectangle.svg";
 import VisibleIcon from "../../assets/icons/eye.svg";
+import { Link } from "react-router-dom";
 
 type FormInputs = {
   email: string;
@@ -29,8 +30,8 @@ export default function LoginPage() {
             <img src={HeroImage} alt="Two models wearing stylish jackets" />
           </div>
           <div className="login-form-section">
-            <h2>Log in</h2>
             <form onSubmit={handleSubmit(onSubmit)}>
+              <h2>Log in</h2>
               <div className="input-group">
                 <input
                   type="email"
@@ -87,7 +88,7 @@ export default function LoginPage() {
               </button>
               <div className="bottom">
                 <span>Not a member?</span>
-                <a href="/register">Register</a>
+                <Link to="/register">Register</Link>{" "}
               </div>
             </form>
           </div>
