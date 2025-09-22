@@ -54,7 +54,9 @@ export default function RegisterPage() {
                 placeholder=" "
                 {...register("username", { required: "Username is required" })}
               />
-              <label htmlFor="username">Username*</label>
+              <label htmlFor="username">
+                Username <span>*</span>
+              </label>
               {errors.username && (
                 <p className="error-message">{errors.username.message}</p>
               )}
@@ -70,7 +72,9 @@ export default function RegisterPage() {
                   pattern: { value: /^\S+@\S+$/i, message: "Invalid email" },
                 })}
               />
-              <label htmlFor="email">Email*</label>
+              <label htmlFor="email">
+                Email <span>*</span>
+              </label>
               {errors.email && (
                 <p className="error-message">{errors.email.message}</p>
               )}
@@ -83,7 +87,9 @@ export default function RegisterPage() {
                 placeholder=" "
                 {...register("password", { required: "Password is required" })}
               />
-              <label htmlFor="password">Password*</label>
+              <label htmlFor="password">
+                Password <span>*</span>
+              </label>
               <img
                 src={VisibleIcon}
                 alt="Show password"
@@ -105,7 +111,9 @@ export default function RegisterPage() {
                     value === password.current || "The passwords do not match",
                 })}
               />
-              <label htmlFor="confirmPassword">Confirm password*</label>
+              <label htmlFor="confirmPassword">
+                Confirm password <span>*</span>
+              </label>
               <img
                 src={VisibleIcon}
                 alt="Show password"
