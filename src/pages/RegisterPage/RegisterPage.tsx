@@ -4,7 +4,6 @@ import { Link, useNavigate } from "react-router-dom";
 import Header from "../../components/layout/Header/Header";
 import HeroImage from "../../assets/images/Rectangle.svg";
 import VisibleIcon from "../../assets/icons/eye.svg";
-import Profile from "../../assets/images/profile-img.jpg";
 import DefaultAvatar from "../../assets/images/avatar.jpg";
 import "./RegisterPage.scss";
 
@@ -12,7 +11,7 @@ type FormInputs = {
   username: string;
   email: string;
   password: string;
-  confirmPassword: string;
+  password_confirmation: string;
   avatar: FileList;
 };
 
@@ -23,46 +22,22 @@ export default function RegisterPage() {
     formState: { errors },
     watch,
     setError,
+    resetField,
   } = useForm<FormInputs>();
 
   const navigate = useNavigate();
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
-  const [hasAvatar, setHasAvatar] = useState(false);
 
   const handleAvatarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       setAvatarPreview(URL.createObjectURL(file));
-      setHasAvatar(true);
     }
   };
 
   const removeAvatar = () => {
     setAvatarPreview(null);
-    setHasAvatar(false);
-  };
-
-  const checkFieldUnique = async (
-    field: "username" | "email",
-    value: string
-  ) => {
-    if (!value) return;
-    try {
-      const res = await fetch(`https://your-api.com/check-${field}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ [field]: value }),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        setError(field, {
-          type: "server",
-          message: data.message || `${field} is already taken`,
-        });
-      }
-    } catch (err) {
-      console.error(err);
-    }
+    resetField("avatar");
   };
 
   const onSubmit: SubmitHandler<FormInputs> = async (data) => {
@@ -70,15 +45,23 @@ export default function RegisterPage() {
     formData.append("username", data.username);
     formData.append("email", data.email);
     formData.append("password", data.password);
+    formData.append("password_confirmation", data.password_confirmation);
+
     if (data.avatar && data.avatar.length > 0) {
       formData.append("avatar", data.avatar[0]);
     }
 
     try {
-      const response = await fetch("https://your-api.com/register", {
-        method: "POST",
-        body: formData,
-      });
+      const response = await fetch(
+        "https://api.redseam.redberryinternship.ge/register",
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+          },
+          body: formData,
+        }
+      );
 
       const responseData = await response.json();
 
@@ -96,7 +79,8 @@ export default function RegisterPage() {
         throw new Error(responseData.message || "Registration failed");
       }
 
-      navigate("/login");
+      localStorage.setItem("authToken", responseData.token);
+      navigate("/");
     } catch (error) {
       console.error("API Error:", error);
     }
@@ -113,11 +97,7 @@ export default function RegisterPage() {
           <form onSubmit={handleSubmit(onSubmit)}>
             <h2>Registration</h2>
             <div className="img-upload-section">
-              <img
-                className="d-none"
-                src={avatarPreview || Profile}
-                alt="Avatar Preview"
-              />
+              {/* 4. Упрощен JSX для аватара */}
               <img
                 className="default-avatar"
                 src={avatarPreview || DefaultAvatar}
@@ -125,7 +105,7 @@ export default function RegisterPage() {
               />
               <div className="action">
                 <label htmlFor="avatar-upload" className="upload-button">
-                  {hasAvatar ? "Update image" : "Update new"}
+                  Update new
                 </label>
                 <input
                   id="avatar-upload"
@@ -139,24 +119,14 @@ export default function RegisterPage() {
                 </span>
               </div>
             </div>
-
             <div className="input-group">
               <input
                 type="text"
                 id="username"
                 placeholder=" "
-                {...register("username", {
-                  required: "Username is required",
-                  minLength: {
-                    value: 3,
-                    message: "Username must be at least 3 characters",
-                  },
-                  onBlur: (e) => checkFieldUnique("username", e.target.value),
-                })}
+                {...register("username", { required: "Username is required" })}
               />
-              <label htmlFor="username">
-                Username <span>*</span>
-              </label>
+              <label htmlFor="username">Username*</label>
               {errors.username && (
                 <p className="error-message">{errors.username.message}</p>
               )}
@@ -170,12 +140,9 @@ export default function RegisterPage() {
                 {...register("email", {
                   required: "Email is required",
                   pattern: { value: /^\S+@\S+$/i, message: "Invalid email" },
-                  onBlur: (e) => checkFieldUnique("email", e.target.value),
                 })}
               />
-              <label htmlFor="email">
-                Email <span>*</span>
-              </label>
+              <label htmlFor="email">Email*</label>
               {errors.email && (
                 <p className="error-message">{errors.email.message}</p>
               )}
@@ -186,17 +153,9 @@ export default function RegisterPage() {
                 type="password"
                 id="password"
                 placeholder=" "
-                {...register("password", {
-                  required: "Password is required",
-                  minLength: {
-                    value: 3,
-                    message: "Password must be at least 3 characters",
-                  },
-                })}
+                {...register("password", { required: "Password is required" })}
               />
-              <label htmlFor="password">
-                Password <span>*</span>
-              </label>
+              <label htmlFor="password">Password*</label>
               <img
                 src={VisibleIcon}
                 alt="Show password"
@@ -210,25 +169,22 @@ export default function RegisterPage() {
             <div className="input-group">
               <input
                 type="password"
-                id="confirmPassword"
-                placeholder=" "
-                {...register("confirmPassword", {
+                id="password_confirmation"
+                {...register("password_confirmation", {
                   required: "Please confirm your password",
                   validate: (value) =>
                     value === watch("password") || "The passwords do not match",
                 })}
               />
-              <label htmlFor="confirmPassword">
-                Confirm password <span>*</span>
-              </label>
+              <label htmlFor="password_confirmation">Confirm password*</label>
               <img
                 src={VisibleIcon}
                 alt="Show password"
                 className="password-icon"
               />
-              {errors.confirmPassword && (
+              {errors.password_confirmation && (
                 <p className="error-message">
-                  {errors.confirmPassword.message}
+                  {errors.password_confirmation.message}
                 </p>
               )}
             </div>

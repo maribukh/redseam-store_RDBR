@@ -1,9 +1,9 @@
 import { useForm, type SubmitHandler } from "react-hook-form";
+import { Link, useNavigate } from "react-router-dom";
 import Header from "../../components/layout/Header/Header";
-import "./LoginPage.scss";
 import HeroImage from "../../assets/images/Rectangle.svg";
 import VisibleIcon from "../../assets/icons/eye.svg";
-import { Link } from "react-router-dom";
+import "./LoginPage.scss";
 
 type FormInputs = {
   email: string;
@@ -15,85 +15,102 @@ export default function LoginPage() {
     register,
     handleSubmit,
     formState: { errors },
+    setError,
   } = useForm<FormInputs>();
 
-  const onSubmit: SubmitHandler<FormInputs> = (data) => {
-    console.log("SUCCESS:", data);
+  const navigate = useNavigate();
+
+  const onSubmit: SubmitHandler<FormInputs> = async (data) => {
+    try {
+      const response = await fetch(
+        "https://api.redseam.redberryinternship.ge/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+
+      const responseData = await response.json();
+
+      if (!response.ok) {
+        setError("root.serverError", {
+          type: "server",
+          message: responseData.message || "Invalid email or password",
+        });
+        throw new Error(responseData.message || "Login failed");
+      }
+
+      console.log("LOGIN SUCCESS:", responseData);
+      localStorage.setItem("authToken", responseData.token);
+
+      navigate("/");
+    } catch (error) {
+      console.error("API Error:", error);
+    }
   };
 
   return (
-    <>
-      <div className="login-page">
-        <Header />
-        <div className="login-page-container">
-          <div className="login-image-section">
-            <img src={HeroImage} alt="Two models wearing stylish jackets" />
-          </div>
-          <div className="login-form-section">
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <h2>Log in</h2>
-              <div className="input-group">
-                <input
-                  type="email"
-                  id="email"
-                  placeholder=" "
-                  {...register("email", {
-                    required: "Email is required",
-                    minLength: {
-                      value: 3,
-                      message: "Email must be at least 3 characters",
-                    },
-                    pattern: {
-                      value: /^\S+@\S+$/i,
-                      message: "Please enter a valid email address",
-                    },
-                  })}
-                />
-                <label htmlFor="email">
-                  Email <span>*</span>
-                </label>
-                {errors.email && (
-                  <p className="error-message">{errors.email.message}</p>
-                )}
-              </div>
-
-              <div className="input-group">
-                <input
-                  type="password"
-                  id="password"
-                  placeholder=" "
-                  {...register("password", {
-                    required: "Password is required",
-                    minLength: {
-                      value: 3,
-                      message: "Password must be at least 3 characters",
-                    },
-                  })}
-                />
-                <label htmlFor="password">
-                  Password <span>*</span>
-                </label>
-                <img
-                  src={VisibleIcon}
-                  alt="Show password"
-                  className="password-icon"
-                />
-                {errors.password && (
-                  <p className="error-message">{errors.password.message}</p>
-                )}
-              </div>
-
-              <button type="submit" className="login-btn">
-                Log In
-              </button>
-              <div className="bottom">
-                <span>Not a member?</span>
-                <Link to="/register">Register</Link>{" "}
-              </div>
-            </form>
-          </div>
+    <div className="login-page">
+      <Header />
+      <main className="login-page-container">
+        <div className="login-image-section">
+          <img src={HeroImage} alt="Two models wearing stylish jackets" />
         </div>
-      </div>
-    </>
+        <div className="login-form-section">
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <h2>Log in</h2>
+            {errors.root?.serverError && (
+              <p className="error-message">{errors.root.serverError.message}</p>
+            )}
+            <div className="input-group">
+              <input
+                type="email"
+                id="email"
+                placeholder=" "
+                {...register("email", { required: "Email is required" })}
+              />
+              <label htmlFor="email">
+                Email <span>*</span>
+              </label>
+              {errors.email && (
+                <p className="error-message">{errors.email.message}</p>
+              )}
+            </div>
+
+            <div className="input-group">
+              <input
+                type="password"
+                id="password"
+                placeholder=" "
+                {...register("password", { required: "Password is required" })}
+              />
+              <label htmlFor="password">
+                Password <span>*</span>
+              </label>
+              <img
+                src={VisibleIcon}
+                alt="Show password"
+                className="password-icon"
+              />
+              {errors.password && (
+                <p className="error-message">{errors.password.message}</p>
+              )}
+            </div>
+
+            <button type="submit" className="login-btn">
+              Log In
+            </button>
+            <div className="bottom">
+              <span>Not a member?</span>
+              <Link to="/register">Register</Link>
+            </div>
+          </form>
+        </div>
+      </main>
+    </div>
   );
 }
