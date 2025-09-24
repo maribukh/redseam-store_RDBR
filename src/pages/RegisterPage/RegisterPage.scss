@@ -1,16 +1,32 @@
 .registration-form-section {
+  // Added for RegisterPage specifics
   .img-upload-section {
-    width: 49.09%;
+    width: 100%;
+    max-width: 300px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 46px;
+    margin-bottom: 2rem;
+
+    img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      cursor: pointer;
+    }
+
     .action {
       display: flex;
       gap: 15px;
 
-      span {
+      span,
+      .upload-button {
         cursor: pointer;
+        color: var(--secondary-gray); // Example color
+        &:hover {
+          color: var(--accent-orange);
+        }
       }
     }
   }

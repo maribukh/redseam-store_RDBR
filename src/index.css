@@ -29,3 +29,7 @@ body {
   width: 89.58%;
   margin: auto;
 }
+
+.d-none {
+  display: none;
+}

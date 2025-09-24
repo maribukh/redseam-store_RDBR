@@ -1,7 +1,6 @@
 import Header from "../../components/layout/Header/Header";
 
-export default function HomePage() {
-  // A component MUST return something to be displayed
+export default function ProductListPage() {
   return (
     <>
       <Header />
