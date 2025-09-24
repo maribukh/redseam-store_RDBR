@@ -1,0 +1,31 @@
+.productList-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 72px;
+
+  .right-side {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .functionals {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      .filter,
+      .sort {
+        display: flex;
+        align-items: center;
+      }
+
+      .filter {
+        gap: 8px;
+      }
+
+      .sort {
+        gap: 4px;
+      }
+    }
+  }
+}
